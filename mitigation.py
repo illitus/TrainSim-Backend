@@ -102,9 +102,11 @@ for k in range(0, len(schedule)):
         # s = True
         a = stations[k]
         b = stations[k+1]
+        print("Currently Running from {} to {} ".format(a, b))
         a_t = schedule[k]
         b_t = schedule[k+1]
         i_dist = 0
+        print(i_dist)
         flag = False
         break
 
@@ -115,19 +117,37 @@ if flag:
             # s = False
             a = stations[k - 1]
             b = stations[k]
+            for i in range(0, len(rows_d)):
+                if a == rows_d[i][0]:
+                    d_a = float(rows_d[i][1])
+                if b == rows_d[i][0]:
+                    d_b = float(rows_d[i][1])
+            t_dist = d_a - d_b
+            print("Currently Running from {} to {} ".format(a, b))
             a_t = schedule[k-1]
             b_t = schedule[k]
+            # calculting total time
             time = b_t - a_t
-            print(time)
+            time = str(time)
+            time = time.split(":")
+            # calculating current time
+            time_c = x - a_t
+            time_c = str(time_c)
+            time_c = time_c.split(":")
+            i_dist = t_dist / float(time[1]) * float(time_c[1])
+            print(i_dist)
+            # print(t_dist / float(time[1]))
             flag = False
             break
 
 # loc = str(input("Enter Departing Station: "))
 dist_rl = float(input("Enter Distance Covered: "))
-time = str(time)
-time = time.split(":")
-print(dist_rl/float(time[1]))
 
+if i_dist > dist_rl:
+    print("Train Delayed")
+
+else:
+    print("Train on time")
 
 
 
