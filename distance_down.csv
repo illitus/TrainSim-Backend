@@ -1,5 +1,5 @@
-﻿Station Name,Distance From Churchgate (KM),Distance (KM) Between Individual Stations
-Churchgate,0,Starting Station
+﻿Station Name,Distance Total,Distance Between
+Churchgate,0,1.3
 Marine Lines,1.3,0.91
 Charni Road,2.21,1.38
 Grant Road,3.59,0.89
@@ -34,4 +34,4 @@ Palghar,90.92,6.22
 Umroli,97.14,5.72
 Boisar,102.86,8.72
 Vangaon,111.58,12.2
-Dahanu Road,123.78,Last Station
+Dahanu Road,123.78,0
