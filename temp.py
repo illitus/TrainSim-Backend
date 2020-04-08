@@ -1,6 +1,6 @@
 # importing csv module
 import csv
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 
 # csv file name
 filename = "churchgate_up.csv"
@@ -70,7 +70,6 @@ for i in range(0, len(rows)):
                 schedule.append(t)
                 stations.append(fields[j])
 
-print(stations)
 # distance data
 
 
@@ -97,20 +96,20 @@ with open(filename_d, 'r') as csvfile:
 flag = True
 
 # for trains in stations
-# for k in range(0, len(schedule)):
-#     if schedule[k] == x:
-#         # s = True
-#         a = stations[k]
-#         b = stations[k+1]
-#         print("Currently Running from {} to {} ".format(a, b))
-#         a_t = schedule[k]
-#         b_t = schedule[k+1]
-#         i_dist = 0
-#         print(i_dist)
-#         flag = False
-#         break
+for k in range(0, len(schedule)):
+    if schedule[k] == x:
+        # s = True
+        a = stations[k]
+        b = stations[k+1]
+        print("Currently Running from {} to {} ".format(a, b))
+        a_t = schedule[k]
+        b_t = schedule[k+1]
+        i_dist = 0
+        print(i_dist)
+        flag = False
+        break
 
-# for trains not in stations
+    # for trains not in stations
 if flag:
     for k in range(0, len(schedule)):
         if schedule[k] > x:
@@ -122,7 +121,7 @@ if flag:
                     d_a = float(rows_d[i][1])
                 if b == rows_d[i][0]:
                     d_b = float(rows_d[i][1])
-            t_dist = d_b - d_a
+            t_dist = d_a - d_b
             print("Currently Running from {} to {} ".format(a, b))
             a_t = schedule[k-1]
             b_t = schedule[k]
@@ -139,51 +138,21 @@ if flag:
             flag = False
             break
 
-loc = str(input("Enter Departing Station: "))
-for i in range(0, len(rows_d)):
-    if loc == rows_d[i][0]:
-        d_loc = float(rows_d[i][1])
-        break
-
+# loc = str(input("Enter Departing Station: "))
 c_dist = float(input("Enter Distance Covered: "))
 
-covered_distance = c_dist + d_loc
-ideal_distance = i_dist + d_a
-
-if ideal_distance > covered_distance:
-    delay = round(ideal_distance - covered_distance, 2)
-    print("Train {} is {} kms behind scheduled position".format(route, delay))
+if i_dist > c_dist:
+    print("Train Delayed")
     # perform mitigation
     time_r = b_t - x
     time_r = str(time_r)
     time_r = time_r.split(":")
 
-    r_dist = d_b - covered_distance
+    r_dist = t_dist - c_dist
 
     m_speed = (r_dist * 60) / float(time_r[1])
 
-    str1 = "There is a major delay in the route."
-    str2 = "The delay cannot be mitigated."
-    str3 = "The train must maintain an average speed of"
-    str4 = " kmph to minimize the delay."
+    print("For the delay to be mitigated the train must run at {} kmph for the remaining distance.".format(round(m_speed, 2)))
 
-    if m_speed > 90:
-        m_speed = 90
-        print("There is a major delay in the route.\n"
-              "The delay cannot be mitigated completely.\n"
-              "The train must maintain an average speed above " +str(m_speed)+ " to minimize the delay.")
-        report = "There is a major delay in the route. The delay cannot be mitigated completely. The train must maintain an average speed above " +str(m_speed)+ " kmph to minimize the delay."
-        with open('delay.csv', 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([date.today(), x, route, delay, loc, "No", report])
-
-
-    else:
-        print("There is a minor delay in the route.\n"
-              "For the delay to be mitigated the train must maintain an average speed of {} kmph for the remaining distance.".format(round(m_speed, 2)))
-        report = "There is a minor delay in the route. For the delay to be mitigated the train must maintain an average speed of" +str(round(m_speed, 2))+ "kmph"
-        with open('delay.csv', 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([date.today(), x, route, delay, loc, "Yes", report])
 else:
-    print("Train {} is on time".format(route))
+    print("Train on time")

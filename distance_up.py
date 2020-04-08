@@ -3,7 +3,7 @@ import csv
 import datetime
 
 # csv file name
-filename = "distance.csv"
+filename = "distance_up.csv"
 
 # initializing the titles and rows list
 fields = []
@@ -39,3 +39,7 @@ print(dist_b-dist_a)
 z = "13:12"
 z = z.split(":")
 print(int(z[0]))
+
+from datetime import date, datetime
+print(date.today())
+print(datetime.now().time())

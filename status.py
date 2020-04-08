@@ -21,11 +21,6 @@ with open(filename, 'r') as csvfile:
     for row in csvreader:
         rows.append(row)
 
-    # get total number of rows
-    # print("Total no. of rows: %d" % csvreader.line_num)
-
-# printing the field names 
-# print('Field names are:' + ', '.join(field for field in fields))
 
 # fetching current time
 x = datetime.datetime.now()
@@ -43,10 +38,7 @@ for i in range(0, len(rows)):
             schedule.append(rows[i][j])
             stations.append(fields[j])
 
-    # print(schedule)
-
     if schedule[0] < x < schedule[-1]:
-        # print("running: ", rows[i][0])
         details.append(rows[i][0])
         flag = True
 
@@ -68,10 +60,8 @@ for i in range(0, len(rows)):
                     details.append(s)
                     flag = False
                     break
-        # print(details)
+
         transit.append(details)
 
-    # else:
-    #     print("not running: ", rows[i][0])
 # current status data
 print(transit)

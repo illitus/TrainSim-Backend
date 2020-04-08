@@ -1,0 +1,4 @@
+Date,Time,Route,Delay,Station Detected,Mitigated,Report
+08-04-2020,13:08:00,90526,0.2,Charni Road,Yes,There is a major delay in the route. The delay cannot be mitigated.The train must maintain an average speed of 24.3kmph to minimize the delay.
+08-04-2020,13:43:00,90556,24.3,Goregaon,No,There is a major delay in the route. The delay cannot be mitigated completely. The train must maintain an average speed above 90 kmph to minimize the delay.
+08-04-2020,13:44:00,90556,2.18,MUMBAI CENTRAL,Yes,There is a minor delay in the route. For the delay to be mitigated the train must maintain an average speed of52.2kmph
