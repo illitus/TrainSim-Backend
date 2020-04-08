@@ -3,7 +3,7 @@ import csv
 from datetime import datetime, timedelta, date
 
 # csv file name
-filename = "churchgate_up.csv"
+filename = "virar_down.csv"
 
 # initializing the titles and rows list
 fields = []
@@ -75,7 +75,7 @@ print(stations)
 
 
 # csv file name
-filename_d = "distance_up.csv"
+filename_d = "distance_down.csv"
 
 # initializing the titles and rows list
 fields_d = []
@@ -122,8 +122,8 @@ if flag:
                     d_a = float(rows_d[i][1])
                 if b == rows_d[i][0]:
                     d_b = float(rows_d[i][1])
-            t_dist = d_b - d_a
             print("Currently Running from {} to {} ".format(a, b))
+            t_dist = d_b - d_a
             a_t = schedule[k-1]
             b_t = schedule[k]
             # calculting total time
@@ -175,7 +175,7 @@ if ideal_distance > covered_distance:
         report = "There is a major delay in the route. The delay cannot be mitigated completely. The train must maintain an average speed above " +str(m_speed)+ " kmph to minimize the delay."
         with open('delay.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([date.today(), x, route, delay, loc, "No", report])
+            writer.writerow([date.today(), x, 'Virar_Down', route, delay, loc, "No", report])
 
 
     else:
@@ -184,6 +184,6 @@ if ideal_distance > covered_distance:
         report = "There is a minor delay in the route. For the delay to be mitigated the train must maintain an average speed of" +str(round(m_speed, 2))+ "kmph"
         with open('delay.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([date.today(), x, route, delay, loc, "Yes", report])
+            writer.writerow([date.today(), x, 'Virar_Down', route, delay, loc, "Yes", report])
 else:
     print("Train {} is on time".format(route))

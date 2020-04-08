@@ -175,7 +175,7 @@ if ideal_distance > covered_distance:
         report = "There is a major delay in the route. The delay cannot be mitigated completely. The train must maintain an average speed above " +str(m_speed)+ " kmph to minimize the delay."
         with open('delay.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([date.today(), x, route, delay, loc, "No", report])
+            writer.writerow([date.today(), x, 'Churchgate_Up', route, delay, loc, "No", report])
 
 
     else:
@@ -184,6 +184,6 @@ if ideal_distance > covered_distance:
         report = "There is a minor delay in the route. For the delay to be mitigated the train must maintain an average speed of" +str(round(m_speed, 2))+ "kmph"
         with open('delay.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([date.today(), x, route, delay, loc, "Yes", report])
+            writer.writerow([date.today(), x, 'Churchgate_Up', route, delay, loc, "Yes", report])
 else:
     print("Train {} is on time".format(route))
