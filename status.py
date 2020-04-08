@@ -1,30 +1,39 @@
 # importing csv module
 import csv
-import datetime
+from datetime import datetime, timedelta
 
-# csv file name 
+# csv file name
 filename = "churchgate_up.csv"
 
-# initializing the titles and rows list 
+# initializing the titles and rows list
 fields = []
 rows = []
 
-# reading csv file 
+# reading csv file
 with open(filename, 'r') as csvfile:
-    # creating a csv reader object 
+    # creating a csv reader object
     csvreader = csv.reader(csvfile)
 
-    # extracting field names through first row 
+    # extracting field names through first row
     fields = next(csvreader)
 
-    # extracting each data row one by one 
+    # extracting each data row one by one
     for row in csvreader:
         rows.append(row)
 
+    # get total number of rows
+    # print("Total no. of rows: %d" % csvreader.line_num)
+
+# printing the field names
+# print('Field names are:' + ', '.join(field for field in fields))
 
 # fetching current time
-x = datetime.datetime.now()
+x = datetime.now()
 x = x.strftime("%H") + ":" + x.strftime("%M")
+
+# converting x into a time variable again
+x = x.split(":")
+x = timedelta(hours=int(x[0]), minutes=int(x[1]))
 
 # checking running trains
 transit = []
@@ -35,10 +44,17 @@ for i in range(0, len(rows)):
     stations = []
     for j in range(3, len(rows[i])):
         if rows[i][j]:
-            schedule.append(rows[i][j])
+            # schedule.append(rows[i][j])
+            t = rows[i][j]
+            t = t.split(":")
+            t = timedelta(hours=int(t[0]), minutes=int(t[1]))
+            schedule.append(t)
             stations.append(fields[j])
 
+    # print(schedule)
+
     if schedule[0] < x < schedule[-1]:
+        # print("running: ", rows[i][0])
         details.append(rows[i][0])
         flag = True
 
@@ -60,8 +76,45 @@ for i in range(0, len(rows)):
                     details.append(s)
                     flag = False
                     break
-
+        # print(details)
         transit.append(details)
 
+    # else:
+    #     print("not running: ", rows[i][0])
 # current status data
 print(transit)
+
+# checking running trains
+new_schedule = []
+
+for i in range(0, len(rows)):
+    schedule = []
+    details = []
+    stations = []
+    for j in range(3, len(rows[i])):
+        if rows[i][j]:
+            # schedule.append(rows[i][j])
+            t = rows[i][j]
+            t = t.split(":")
+            t = timedelta(hours=int(t[0]), minutes=int(t[1]))
+            schedule.append(t)
+            stations.append(fields[j])
+
+    # print(schedule)
+
+    if schedule[0] < x < schedule[-1]:
+        # print("running: ", rows[i][0])
+        details.append(rows[i][0])
+        flag = True
+        for k in range(3, len(rows[i])):
+            if rows[i][k]:
+                details.append(rows[i][k])
+            else:
+                details.append('-')
+
+        new_schedule.append(details)
+
+    # else:
+    #     print("not running: ", rows[i][0])
+# current status data
+print(new_schedule)
