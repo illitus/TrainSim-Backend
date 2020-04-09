@@ -7,3 +7,5 @@ Date,Time,Line,Route,Delay,Station Detected,Mitigated,Report
 08-04-2020,19:18:00,Virar_Down,90869,4.43,Vasai Road,No,There is a major delay in the route. The delay cannot be mitigated completely. The train must maintain an average speed above 90 kmph to minimize the delay.
 08-04-2020,19:18:00,Virar_Down,90869,2.43,Vasai Road,Yes,There is a minor delay in the route. For the delay to be mitigated the train must maintain an average speed of84.0kmph
 08-04-2020,19:21:00,Churchgate_Up,90990,1.21,BORIVALI,No,There is a major delay in the route. The delay cannot be mitigated completely. The train must maintain an average speed above 90 kmph to minimize the delay.
+2020-04-09,10:03:00,Churchgate_Up,90382,0.67,Kandivli,Yes,There is a minor delay in the route. For the delay to be mitigated the train must maintain an average speed of78.0kmph
+2020-04-09,18:25:00,Churchgate_Up,90844,8.36,BANDRA,No,There is a major delay in the route. The delay cannot be mitigated completely. The train must maintain an average speed above 90 kmph to minimize the delay.
