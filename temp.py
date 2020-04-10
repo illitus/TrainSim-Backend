@@ -1,26 +1,12 @@
-def dashboard_vircg(request):
+def vircg_delay(request, routecode):
     cg_up = "statics/csv/churchgate_up.csv"
     stat = "statics/csv/distance_up.csv"
+
     # initializing the titles and rows list
     transit = []
     new_schedule = []
     fields = []
     rows = []
-    # print(os.getcwd())
-    # reading csv file
-    with open(cg_up, 'r') as csvfile:
-        # creating a csv reader object
-        csvreader = csv.reader(csvfile)
-
-        # extracting field names through first row
-        fields = next(csvreader)
-
-        # extracting each data row one by one
-        for row in csvreader:
-            rows.append(row)
-
-        # get total number of rows
-        # print("Total no. of rows: %d" % csvreader.line_num)
     statfields = []
     statlist = []
     with open(stat, 'r') as csvfile:
@@ -33,7 +19,18 @@ def dashboard_vircg(request):
         # extracting each data row one by one
         for row in csvreader:
             statlist.append(row[0])
-    # fetching current time
+    # print(os.getcwd())
+    # reading csv file
+    with open(cg_up, 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+
+        # extracting field names through first row
+        fields = next(csvreader)
+
+        # extracting each data row one by one
+        for row in csvreader:
+            rows.append(row)
     x = datetime.now()
     # x=time(10,3,0)
     x = x.strftime("%H") + ":" + x.strftime("%M")
@@ -67,8 +64,7 @@ def dashboard_vircg(request):
             # for trains in stations
             for k in range(0, len(schedule)):
                 if schedule[k] == x:
-                    s = dist_up(schedule, stations, x)
-
+                    s = dist_down(schedule, stations, x)
                     details.append(stations[k].upper())
                     details.append(10 + statlist.index(stations[k]) * 37.5)
                     details.append(s)
@@ -79,7 +75,7 @@ def dashboard_vircg(request):
             if flag:
                 for k in range(0, len(schedule)):
                     if schedule[k] > x:
-                        s = dist_up(schedule, stations, x)
+                        s = dist_down(schedule, stations, x)
                         details.append(stations[k - 1].upper())
                         details.append(10 + statlist.index(stations[k - 1]) * 37.5)
                         details.append(s)
@@ -105,9 +101,16 @@ def dashboard_vircg(request):
             for k in range(3, len(rows[i])):
                 if rows[i][k]:
                     details.append(rows[i][k])
+
                 else:
                     details.append('----:----')
 
             new_schedule.append(details)
-    ziplist = zip(transit, new_schedule)
-    return render(request, "dashboard/vircg.html", {'timenow': x, 'ziplist': ziplist})
+    ind = 0
+    for each in transit:
+        if (each[0] == routecode):
+            break
+        ind = ind + 1
+    res = mitigation_up(request, routecode)
+    return render(request, "dashboard/route_vircg.html",
+                  {"each": transit[ind], "tr": new_schedule[ind], 'timenow': x, "statlist": statlist, "res": res})
