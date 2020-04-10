@@ -1,67 +1,97 @@
-# importing csv module
-import csv
-from datetime import datetime, timedelta, date
+def dashboard_vircg(request):
+    cg_up = "statics/csv/churchgate_up.csv"
+    stat = "statics/csv/distance_up.csv"
+    # initializing the titles and rows list
+    transit = []
+    new_schedule = []
+    fields = []
+    rows = []
+    # print(os.getcwd())
+    # reading csv file
+    with open(cg_up, 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
 
-# csv file name
-filename = "churchgate_up.csv"
+        # extracting field names through first row
+        fields = next(csvreader)
 
-# initializing the titles and rows list
-fields = []
-rows = []
+        # extracting each data row one by one
+        for row in csvreader:
+            rows.append(row)
 
-# reading csv file
-with open(filename, 'r') as csvfile:
-    # creating a csv reader object
-    csvreader = csv.reader(csvfile)
+        # get total number of rows
+        # print("Total no. of rows: %d" % csvreader.line_num)
+    statfields = []
+    statlist = []
+    with open(stat, 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
 
-    # extracting field names through first row
-    fields = next(csvreader)
+        # extracting field names through first row
+        statfields = next(csvreader)
 
-    # extracting each data row one by one
-    for row in csvreader:
-        rows.append(row)
+        # extracting each data row one by one
+        for row in csvreader:
+            statlist.append(row[0])
+    # fetching current time
+    x = datetime.now()
+    # x=time(10,3,0)
+    x = x.strftime("%H") + ":" + x.strftime("%M")
 
+    # converting x into a time variable again
+    x = x.split(":")
+    x = timedelta(hours=int(x[0]), minutes=int(x[1]))
 
-# fetching current time
-x = datetime.now()
-x = x.strftime("%H") + ":" + x.strftime("%M")
+    # checking running trains
+    new_schedule = []
+    for i in range(0, len(rows)):
+        schedule = []
+        details = []
+        stations = []
+        for j in range(3, len(rows[i])):
+            if rows[i][j]:
+                # schedule.append(rows[i][j])
+                t = rows[i][j]
+                t = t.split(":")
+                t = timedelta(hours=int(t[0]), minutes=int(t[1]))
+                schedule.append(t)
+                stations.append(fields[j])
 
-# converting x into a time variable again
-x = x.split(":")
-x = timedelta(hours=10, minutes= 3)
+        # print(schedule)
 
-# checking running trains
-transit = []
+        if schedule[0] < x < schedule[-1]:
+            # print("running: ", rows[i][0])
+            details.append(rows[i][0])
+            flag = True
 
-for i in range(0, len(rows)):
-    schedule = []
-    details = []
-    stations = []
-    for j in range(3, len(rows[i])):
-        if rows[i][j]:
-            # schedule.append(rows[i][j])
-            t = rows[i][j]
-            t = t.split(":")
-            t = timedelta(hours=int(t[0]), minutes=int(t[1]))
-            schedule.append(t)
-            stations.append(fields[j])
+            # for trains in stations
+            for k in range(0, len(schedule)):
+                if schedule[k] == x:
+                    s = dist_up(schedule, stations, x)
 
-    # print(schedule)
+                    details.append(stations[k].upper())
+                    details.append(10 + statlist.index(stations[k]) * 37.5)
+                    details.append(s)
+                    flag = False
+                    break
 
-    if schedule[0] < x < schedule[-1]:
-        transit.append(rows[i][0])
+            # for trains not in stations
+            if flag:
+                for k in range(0, len(schedule)):
+                    if schedule[k] > x:
+                        s = dist_up(schedule, stations, x)
+                        details.append(stations[k - 1].upper())
+                        details.append(10 + statlist.index(stations[k - 1]) * 37.5)
+                        details.append(s)
+                        flag = False
+                        break
+            # print(details)
+            transit.append(details)
 
-
-# current status data
-print(transit)
-
-route = str(input("Enter Route Code: "))
-
-schedule = []
-stations = []
-
-for i in range(0, len(rows)):
-    if route == rows[i][0]:
+    for i in range(0, len(rows)):
+        schedule = []
+        details = []
+        stations = []
         for j in range(3, len(rows[i])):
             if rows[i][j]:
                 t = rows[i][j]
@@ -70,120 +100,14 @@ for i in range(0, len(rows)):
                 schedule.append(t)
                 stations.append(fields[j])
 
-print(stations)
-# distance data
+        if schedule[0] < x < schedule[-1]:
+            flag = True
+            for k in range(3, len(rows[i])):
+                if rows[i][k]:
+                    details.append(rows[i][k])
+                else:
+                    details.append('----:----')
 
-
-# csv file name
-filename_d = "distance_up.csv"
-
-# initializing the titles and rows list
-fields_d = []
-rows_d = []
-
-# reading csv file
-with open(filename_d, 'r') as csvfile:
-    # creating a csv reader object
-    csvreader = csv.reader(csvfile)
-
-    # extracting field names through first row
-    fields_d = next(csvreader)
-
-    # extracting each data row one by one
-    for row in csvreader:
-        rows_d.append(row)
-
-
-flag = True
-
-# for trains in stations
-# for k in range(0, len(schedule)):
-#     if schedule[k] == x:
-#         # s = True
-#         a = stations[k]
-#         b = stations[k+1]
-#         print("Currently Running from {} to {} ".format(a, b))
-#         a_t = schedule[k]
-#         b_t = schedule[k+1]
-#         i_dist = 0
-#         print(i_dist)
-#         flag = False
-#         break
-
-# for trains not in stations
-if flag:
-    for k in range(0, len(schedule)):
-        if schedule[k] > x:
-            # s = False
-            a = stations[k - 1]
-            b = stations[k]
-            for i in range(0, len(rows_d)):
-                if a == rows_d[i][0]:
-                    d_a = float(rows_d[i][1])
-                if b == rows_d[i][0]:
-                    d_b = float(rows_d[i][1])
-            t_dist = d_b - d_a
-            print("Currently Running from {} to {} ".format(a, b))
-            a_t = schedule[k-1]
-            b_t = schedule[k]
-            # calculting total time
-            time = b_t - a_t
-            time = str(time)
-            time = time.split(":")
-            # calculating current time
-            time_c = x - a_t
-            time_c = str(time_c)
-            time_c = time_c.split(":")
-            i_dist = (t_dist / float(time[1])) * float(time_c[1])
-            print(i_dist)
-            flag = False
-            break
-
-loc = str(input("Enter Departing Station: "))
-for i in range(0, len(rows_d)):
-    if loc == rows_d[i][0]:
-        d_loc = float(rows_d[i][1])
-        break
-
-c_dist = float(input("Enter Distance Covered: "))
-
-covered_distance = c_dist + d_loc
-ideal_distance = i_dist + d_a
-
-if ideal_distance > covered_distance:
-    delay = round(ideal_distance - covered_distance, 2)
-    print("Train {} is {} kms behind scheduled position".format(route, delay))
-    # perform mitigation
-    time_r = b_t - x
-    time_r = str(time_r)
-    time_r = time_r.split(":")
-
-    r_dist = d_b - covered_distance
-
-    m_speed = (r_dist * 60) / float(time_r[1])
-
-    str1 = "There is a major delay in the route."
-    str2 = "The delay cannot be mitigated."
-    str3 = "The train must maintain an average speed of"
-    str4 = " kmph to minimize the delay."
-
-    if m_speed > 90:
-        m_speed = 90
-        print("There is a major delay in the route.\n"
-              "The delay cannot be mitigated completely.\n"
-              "The train must maintain an average speed above " +str(m_speed)+ " to minimize the delay.")
-        report = "There is a major delay in the route. The delay cannot be mitigated completely. The train must maintain an average speed above " +str(m_speed)+ " kmph to minimize the delay."
-        with open('delay.csv', 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([date.today(), x, 'Churchgate_Up', route, delay, loc, "No", report])
-
-
-    else:
-        print("There is a minor delay in the route.\n"
-              "For the delay to be mitigated the train must maintain an average speed of {} kmph for the remaining distance.".format(round(m_speed, 2)))
-        report = "There is a minor delay in the route. For the delay to be mitigated the train must maintain an average speed of" +str(round(m_speed, 2))+ "kmph"
-        with open('delay.csv', 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([date.today(), x, 'Churchgate_Up', route, delay, loc, "Yes", report])
-else:
-    print("Train {} is on time".format(route))
+            new_schedule.append(details)
+    ziplist = zip(transit, new_schedule)
+    return render(request, "dashboard/vircg.html", {'timenow': x, 'ziplist': ziplist})
